@@ -13,6 +13,7 @@ namespace Infrastructure.Presisitence.Configuration
             builder.HasKey(k => k.OrderId);
 
             builder.Property(p => p.Deleted);
+            builder.HasQueryFilter(p => !p.Deleted);
 
             builder.Property(p => p.CreatedAt)
                 .HasColumnType("DateTime")
