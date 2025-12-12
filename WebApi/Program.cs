@@ -1,6 +1,7 @@
 using Application.Interfaces;
 using Infrastructure.Presisitence;
 using Infrastructure.Services;
+using Microsoft.AspNetCore.Diagnostics;
 using Microsoft.EntityFrameworkCore;
 using StackExchange.Redis;
 
@@ -28,10 +29,11 @@ builder.Services.AddMemoryCache();
 builder.Services.AddSingleton<IConnectionMultiplexer>(sp =>
     ConnectionMultiplexer.Connect(builder.Configuration.GetConnectionString("Redis")));
 
-
 builder.Services.AddScoped<ICacheService, CacheService>();
 
+
 var app = builder.Build();
+app.UseMiddleware<ExceptionHandlerMiddleware>();
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
