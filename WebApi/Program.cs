@@ -33,7 +33,7 @@ builder.Services.AddScoped<ICacheService, CacheService>();
 
 
 var app = builder.Build();
-app.UseMiddleware<ExceptionHandlerMiddleware>();
+app.UseMiddleware<WebApi.Middlewares.ExceptionHandlerMiddleware>();
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())

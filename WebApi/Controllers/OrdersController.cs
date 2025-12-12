@@ -16,20 +16,21 @@ namespace WebApi.Controllers
         {
             _mediator = mediator;
         }
+
+        [HttpPost("Create")]
+        public async Task<IActionResult> Create([FromBody] CreateOrderCommand command)
+        {
+            var result = await _mediator.Send(command);
+            return result.IsSuccess ? Ok(result.Result) : BadRequest(result.Error);
+        }
+
+
         [HttpDelete("Delete")]
         public async Task<IActionResult> Delete(Guid id)
         {
             var command = new DeleteOrderCommand { OrderId = id };
             var result = await _mediator.Send(command);
 
-            return result.IsSuccess ? Ok(result.Result) : BadRequest(result.Error);
-        }
-
-
-        [HttpPost("Create")]
-        public async Task<IActionResult> Create([FromBody] CreateOrderCommand command)
-        {
-            var result = await _mediator.Send(command);
             return result.IsSuccess ? Ok(result.Result) : BadRequest(result.Error);
         }
 
