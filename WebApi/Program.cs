@@ -26,8 +26,8 @@ builder.Services.AddMediatR(cfg => cfg
 builder.Services.AddMemoryCache();
 
 //Redis Configuration
-builder.Services.AddSingleton<IConnectionMultiplexer>(sp =>
-    ConnectionMultiplexer.Connect(builder.Configuration.GetConnectionString("Redis")));
+var redis = ConnectionMultiplexer.Connect("localhost:6379,abortConnect=false");
+builder.Services.AddSingleton<IConnectionMultiplexer>(redis);
 
 builder.Services.AddScoped<ICacheService, CacheService>();
 
