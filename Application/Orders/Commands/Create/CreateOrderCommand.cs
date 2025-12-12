@@ -14,9 +14,12 @@ namespace Application.Orders.Commands.Create
         public class CreateOrderHandler : IRequestHandler<CreateOrderCommand, ResponseDto<object>>
         {
             private readonly IAppDbContext _context;
-            public CreateOrderHandler(IAppDbContext context)
+            private readonly ICacheService _cache;
+
+            public CreateOrderHandler(IAppDbContext context, ICacheService cache)
             {
                 _context = context;
+                _cache = cache;
             }
             public async Task<ResponseDto<object>> Handle(CreateOrderCommand request, CancellationToken cancellationToken)
             {
@@ -34,6 +37,9 @@ namespace Application.Orders.Commands.Create
                 _context.Orders.Add(order);
 
                 await _context.SaveChangesAsync(cancellationToken);
+
+                await _cache.SetAsync($"order:{order.OrderId}", order, TimeSpan.FromMinutes(5));
+                await _cache.RemoveAsync("orders:all");
 
                 return ResponseDto<object>.Success(new ResultDto
                 {
